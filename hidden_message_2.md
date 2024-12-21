@@ -17,7 +17,7 @@ Author: Jimmy Johansson (bearbetning@outlook.com)
 > Note. 
 > The wav files is also available in the hidden_message_2/ directory if the url stops working.
 
-# Solution 
+## Solution 
 First, I used the `file` utility to detemine the type of the downloaded file. This reveals it being a WAVE audio file, which was no suprise. What is worth noting is that the audio file is a stereo file, meaning it has two audio channels, one for left and one for right. 
 
 ![file command output](hidden_message_2/file_cmd.png)
@@ -25,7 +25,7 @@ First, I used the `file` utility to detemine the type of the downloaded file. Th
 After confirminig the file being a audio file, it was opened in [sonicvisualiser](https://www.sonicvisualiser.org), which  is a tool that allows us to view the audio through different spectrograms and is in general great for analyzing audio files. Putting each channel of the audio file into a spectrogram, reveals some high and low frequencies tones being played in each channel.
 
 ![sonic spectrogram](hidden_message_2/sonic.png)
-> The top sectrogam is channel 1 and the bottom is channel 2.
+> The top spectrogam is channel 1 and the bottom is channel 2.
 
 
 Each high tone and low tone are not exactly the same frequency each time, however they are close enough to classify as either high, which will become a 1 and and low, which will become a 0.
@@ -45,6 +45,6 @@ Decoding the binary using [CyberChef](https://cyberchef.org/#recipe=From_Binary(
 To get the flag, the two binay values need to be XORed with each other, which is possible with CyberChef. Once the two binary strings have been XORed, the flag is revealed: `O24{SOUNDS_HORRIBLE!}`
 
 > Note
-> When using cyberchef to XOR the two binary values, the 'From Binary' operation needs to be used  before the 'XOR' operation. Also, remember to select binary has the type of the key.
+> When using cyberchef to XOR the two binary values, the 'From Binary' operation needs to be used before the 'XOR' operation. Also, remember to select binary as the type of the key.
 
 Merry XMAS!
